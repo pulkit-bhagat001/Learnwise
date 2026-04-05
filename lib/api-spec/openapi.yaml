@@ -1,0 +1,1607 @@
+openapi: 3.1.0
+info:
+  title: Api
+  version: 0.1.0
+  description: Personalised Learning System API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: auth
+    description: Authentication
+  - name: subjects
+    description: Subjects and topics management
+  - name: materials
+    description: Study materials
+  - name: assignments
+    description: Assignment management
+  - name: attendance
+    description: Attendance tracking
+  - name: pomodoro
+    description: Pomodoro sessions
+  - name: planner
+    description: AI study planner
+  - name: dashboard
+    description: Dashboard analytics
+  - name: rewards
+    description: Points and rewards
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /auth/register:
+    post:
+      operationId: registerUser
+      tags: [auth]
+      summary: Register new student
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/login:
+    post:
+      operationId: loginUser
+      tags: [auth]
+      summary: Login student
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/logout:
+    post:
+      operationId: logoutUser
+      tags: [auth]
+      summary: Logout student
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get current user profile
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    put:
+      operationId: updateMe
+      tags: [auth]
+      summary: Update current user profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateProfileRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+
+  /subjects:
+    get:
+      operationId: getSubjects
+      tags: [subjects]
+      summary: Get all subjects
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Subject"
+    post:
+      operationId: createSubject
+      tags: [subjects]
+      summary: Create a new subject
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSubjectRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subject"
+
+  /subjects/{subjectId}:
+    get:
+      operationId: getSubject
+      tags: [subjects]
+      summary: Get a subject with its topics
+      parameters:
+        - name: subjectId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubjectWithTopics"
+    put:
+      operationId: updateSubject
+      tags: [subjects]
+      summary: Update a subject
+      parameters:
+        - name: subjectId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSubjectRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subject"
+    delete:
+      operationId: deleteSubject
+      tags: [subjects]
+      summary: Delete a subject
+      parameters:
+        - name: subjectId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /subjects/{subjectId}/topics:
+    get:
+      operationId: getTopics
+      tags: [subjects]
+      summary: Get topics for a subject
+      parameters:
+        - name: subjectId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Topic"
+    post:
+      operationId: createTopic
+      tags: [subjects]
+      summary: Create a topic in a subject
+      parameters:
+        - name: subjectId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTopicRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Topic"
+
+  /subjects/{subjectId}/topics/{topicId}:
+    put:
+      operationId: updateTopic
+      tags: [subjects]
+      summary: Update a topic
+      parameters:
+        - name: subjectId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: topicId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTopicRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Topic"
+    delete:
+      operationId: deleteTopic
+      tags: [subjects]
+      summary: Delete a topic
+      parameters:
+        - name: subjectId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: topicId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /materials:
+    get:
+      operationId: getMaterials
+      tags: [materials]
+      summary: Get all study materials
+      parameters:
+        - name: subjectId
+          in: query
+          schema:
+            type: integer
+        - name: topicId
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StudyMaterial"
+    post:
+      operationId: createMaterial
+      tags: [materials]
+      summary: Create a study material with AI processing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateMaterialRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudyMaterial"
+
+  /materials/{materialId}:
+    get:
+      operationId: getMaterial
+      tags: [materials]
+      summary: Get a study material
+      parameters:
+        - name: materialId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudyMaterial"
+    delete:
+      operationId: deleteMaterial
+      tags: [materials]
+      summary: Delete a study material
+      parameters:
+        - name: materialId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /assignments:
+    get:
+      operationId: getAssignments
+      tags: [assignments]
+      summary: Get all assignments
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, in_progress, completed, overdue]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Assignment"
+    post:
+      operationId: createAssignment
+      tags: [assignments]
+      summary: Create a new assignment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAssignmentRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Assignment"
+
+  /assignments/{assignmentId}:
+    put:
+      operationId: updateAssignment
+      tags: [assignments]
+      summary: Update an assignment
+      parameters:
+        - name: assignmentId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateAssignmentRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Assignment"
+    delete:
+      operationId: deleteAssignment
+      tags: [assignments]
+      summary: Delete an assignment
+      parameters:
+        - name: assignmentId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /attendance:
+    get:
+      operationId: getAttendance
+      tags: [attendance]
+      summary: Get attendance records
+      parameters:
+        - name: subjectId
+          in: query
+          schema:
+            type: integer
+        - name: month
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AttendanceResponse"
+    post:
+      operationId: markAttendance
+      tags: [attendance]
+      summary: Mark attendance for a subject
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MarkAttendanceRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AttendanceRecord"
+
+  /attendance/goals:
+    get:
+      operationId: getAttendanceGoals
+      tags: [attendance]
+      summary: Get attendance goals
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AttendanceGoal"
+    post:
+      operationId: setAttendanceGoal
+      tags: [attendance]
+      summary: Set attendance goal for a subject
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SetAttendanceGoalRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AttendanceGoal"
+
+  /pomodoro/sessions:
+    get:
+      operationId: getPomodoroSessions
+      tags: [pomodoro]
+      summary: Get Pomodoro sessions
+      parameters:
+        - name: subjectId
+          in: query
+          schema:
+            type: integer
+        - name: topicId
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PomodoroSession"
+    post:
+      operationId: createPomodoroSession
+      tags: [pomodoro]
+      summary: Log a Pomodoro session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePomodoroSessionRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PomodoroSession"
+
+  /planner/generate:
+    post:
+      operationId: generateStudyPlan
+      tags: [planner]
+      summary: Generate AI study plan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GeneratePlanRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudyPlan"
+
+  /planner/plans:
+    get:
+      operationId: getStudyPlans
+      tags: [planner]
+      summary: Get saved study plans
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StudyPlan"
+
+  /dashboard:
+    get:
+      operationId: getDashboard
+      tags: [dashboard]
+      summary: Get dashboard analytics
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardData"
+
+  /rewards:
+    get:
+      operationId: getRewards
+      tags: [rewards]
+      summary: Get rewards and points info
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RewardsData"
+
+  /rewards/history:
+    get:
+      operationId: getPointsHistory
+      tags: [rewards]
+      summary: Get points history
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PointsEvent"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+
+    RegisterRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 6
+        grade:
+          type: string
+        school:
+          type: string
+      required:
+        - name
+        - email
+        - password
+
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - email
+        - password
+
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        user:
+          $ref: "#/components/schemas/UserProfile"
+      required:
+        - token
+        - user
+
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        grade:
+          type: string
+        school:
+          type: string
+        avatarUrl:
+          type: string
+        totalPoints:
+          type: integer
+        streak:
+          type: integer
+        level:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - email
+        - totalPoints
+        - streak
+        - level
+        - createdAt
+
+    UpdateProfileRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        grade:
+          type: string
+        school:
+          type: string
+        avatarUrl:
+          type: string
+
+    Subject:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        color:
+          type: string
+        icon:
+          type: string
+        description:
+          type: string
+        totalStudyMinutes:
+          type: integer
+        topicCount:
+          type: integer
+        completedTopics:
+          type: integer
+        attendancePercent:
+          type: number
+        performanceScore:
+          type: number
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - color
+        - totalStudyMinutes
+        - topicCount
+        - completedTopics
+        - performanceScore
+        - createdAt
+
+    SubjectWithTopics:
+      allOf:
+        - $ref: "#/components/schemas/Subject"
+        - type: object
+          properties:
+            topics:
+              type: array
+              items:
+                $ref: "#/components/schemas/Topic"
+
+    CreateSubjectRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        color:
+          type: string
+        icon:
+          type: string
+        description:
+          type: string
+      required:
+        - name
+        - color
+
+    Topic:
+      type: object
+      properties:
+        id:
+          type: integer
+        subjectId:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [not_started, in_progress, completed, needs_revision]
+        difficulty:
+          type: string
+          enum: [easy, medium, hard]
+        studyMinutes:
+          type: integer
+        materialCount:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - subjectId
+        - name
+        - status
+        - difficulty
+        - studyMinutes
+        - materialCount
+        - createdAt
+
+    CreateTopicRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        difficulty:
+          type: string
+          enum: [easy, medium, hard]
+      required:
+        - name
+        - difficulty
+
+    StudyMaterial:
+      type: object
+      properties:
+        id:
+          type: integer
+        subjectId:
+          type: integer
+        topicId:
+          type: integer
+        title:
+          type: string
+        content:
+          type: string
+        type:
+          type: string
+          enum: [notes, text, pdf_text, image_text]
+        aiGenerated:
+          type: boolean
+        flashcards:
+          type: array
+          items:
+            $ref: "#/components/schemas/Flashcard"
+        summary:
+          type: string
+        shortAnswerQuestions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Question"
+        mcqs:
+          type: array
+          items:
+            $ref: "#/components/schemas/MCQ"
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - subjectId
+        - title
+        - content
+        - type
+        - aiGenerated
+        - createdAt
+
+    Flashcard:
+      type: object
+      properties:
+        front:
+          type: string
+        back:
+          type: string
+      required:
+        - front
+        - back
+
+    Question:
+      type: object
+      properties:
+        question:
+          type: string
+        answer:
+          type: string
+      required:
+        - question
+        - answer
+
+    MCQ:
+      type: object
+      properties:
+        question:
+          type: string
+        options:
+          type: array
+          items:
+            type: string
+        correctIndex:
+          type: integer
+        explanation:
+          type: string
+      required:
+        - question
+        - options
+        - correctIndex
+
+    CreateMaterialRequest:
+      type: object
+      properties:
+        subjectId:
+          type: integer
+        topicId:
+          type: integer
+        title:
+          type: string
+        content:
+          type: string
+        type:
+          type: string
+          enum: [notes, text, pdf_text, image_text]
+        generateAI:
+          type: boolean
+      required:
+        - subjectId
+        - title
+        - content
+        - type
+
+    Assignment:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        subjectId:
+          type: integer
+        topicId:
+          type: integer
+        dueDate:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [pending, in_progress, completed, overdue]
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+        completedAt:
+          type: string
+          format: date-time
+        lateCompletion:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - title
+        - dueDate
+        - status
+        - priority
+        - lateCompletion
+        - createdAt
+
+    CreateAssignmentRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        subjectId:
+          type: integer
+        topicId:
+          type: integer
+        dueDate:
+          type: string
+          format: date-time
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+      required:
+        - title
+        - dueDate
+        - priority
+
+    UpdateAssignmentRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        subjectId:
+          type: integer
+        topicId:
+          type: integer
+        dueDate:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [pending, in_progress, completed, overdue]
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+
+    AttendanceRecord:
+      type: object
+      properties:
+        id:
+          type: integer
+        subjectId:
+          type: integer
+        date:
+          type: string
+          format: date
+        status:
+          type: string
+          enum: [present, absent, late, excused]
+        notes:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - subjectId
+        - date
+        - status
+        - createdAt
+
+    AttendanceResponse:
+      type: object
+      properties:
+        records:
+          type: array
+          items:
+            $ref: "#/components/schemas/AttendanceRecord"
+        stats:
+          type: object
+          properties:
+            totalDays:
+              type: integer
+            presentDays:
+              type: integer
+            absentDays:
+              type: integer
+            lateDays:
+              type: integer
+            percentage:
+              type: number
+          required:
+            - totalDays
+            - presentDays
+            - absentDays
+            - lateDays
+            - percentage
+      required:
+        - records
+        - stats
+
+    MarkAttendanceRequest:
+      type: object
+      properties:
+        subjectId:
+          type: integer
+        date:
+          type: string
+          format: date
+        status:
+          type: string
+          enum: [present, absent, late, excused]
+        notes:
+          type: string
+      required:
+        - subjectId
+        - date
+        - status
+
+    AttendanceGoal:
+      type: object
+      properties:
+        id:
+          type: integer
+        subjectId:
+          type: integer
+        targetPercent:
+          type: number
+        currentPercent:
+          type: number
+        penaltyThreshold:
+          type: number
+      required:
+        - id
+        - subjectId
+        - targetPercent
+        - currentPercent
+        - penaltyThreshold
+
+    SetAttendanceGoalRequest:
+      type: object
+      properties:
+        subjectId:
+          type: integer
+        targetPercent:
+          type: number
+        penaltyThreshold:
+          type: number
+      required:
+        - subjectId
+        - targetPercent
+        - penaltyThreshold
+
+    PomodoroSession:
+      type: object
+      properties:
+        id:
+          type: integer
+        subjectId:
+          type: integer
+        topicId:
+          type: integer
+        durationMinutes:
+          type: integer
+        breakMinutes:
+          type: integer
+        completedPomodoros:
+          type: integer
+        notes:
+          type: string
+        date:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - durationMinutes
+        - breakMinutes
+        - completedPomodoros
+        - date
+        - createdAt
+
+    CreatePomodoroSessionRequest:
+      type: object
+      properties:
+        subjectId:
+          type: integer
+        topicId:
+          type: integer
+        durationMinutes:
+          type: integer
+        breakMinutes:
+          type: integer
+        completedPomodoros:
+          type: integer
+        notes:
+          type: string
+      required:
+        - durationMinutes
+        - breakMinutes
+        - completedPomodoros
+
+    GeneratePlanRequest:
+      type: object
+      properties:
+        planType:
+          type: string
+          enum: [topic, unit, subject, exam_prep]
+        subjectId:
+          type: integer
+        topicId:
+          type: integer
+        examDate:
+          type: string
+          format: date
+        availableHoursPerDay:
+          type: number
+        targetDate:
+          type: string
+          format: date
+        notes:
+          type: string
+      required:
+        - planType
+        - availableHoursPerDay
+
+    StudyPlan:
+      type: object
+      properties:
+        id:
+          type: integer
+        planType:
+          type: string
+        title:
+          type: string
+        subjectId:
+          type: integer
+        topicId:
+          type: integer
+        examDate:
+          type: string
+          format: date
+        availableHoursPerDay:
+          type: number
+        dailyTasks:
+          type: array
+          items:
+            $ref: "#/components/schemas/DailyTask"
+        tips:
+          type: array
+          items:
+            type: string
+        motivationalMessage:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - planType
+        - title
+        - dailyTasks
+        - tips
+        - createdAt
+
+    DailyTask:
+      type: object
+      properties:
+        day:
+          type: integer
+        date:
+          type: string
+          format: date
+        tasks:
+          type: array
+          items:
+            type: string
+        focusTopics:
+          type: array
+          items:
+            type: string
+        estimatedMinutes:
+          type: integer
+      required:
+        - day
+        - tasks
+        - estimatedMinutes
+
+    DashboardData:
+      type: object
+      properties:
+        totalStudyHours:
+          type: number
+        weeklyStudyHours:
+          type: number
+        totalPoints:
+          type: integer
+        currentStreak:
+          type: integer
+        longestStreak:
+          type: integer
+        level:
+          type: integer
+        levelProgress:
+          type: number
+        attendancePercent:
+          type: number
+        completedAssignments:
+          type: integer
+        pendingAssignments:
+          type: integer
+        overdueAssignments:
+          type: integer
+        completedPomodoros:
+          type: integer
+        subjectStats:
+          type: array
+          items:
+            $ref: "#/components/schemas/SubjectStat"
+        weeklyActivity:
+          type: array
+          items:
+            $ref: "#/components/schemas/DayActivity"
+        weakSubjects:
+          type: array
+          items:
+            type: string
+        strongSubjects:
+          type: array
+          items:
+            type: string
+        recommendations:
+          type: array
+          items:
+            type: string
+        motivationalTip:
+          type: string
+        todayPlan:
+          type: array
+          items:
+            type: string
+        upcomingExams:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExamCountdown"
+        badges:
+          type: array
+          items:
+            $ref: "#/components/schemas/Badge"
+        recentActivities:
+          type: array
+          items:
+            $ref: "#/components/schemas/Activity"
+      required:
+        - totalStudyHours
+        - weeklyStudyHours
+        - totalPoints
+        - currentStreak
+        - longestStreak
+        - level
+        - levelProgress
+        - attendancePercent
+        - completedAssignments
+        - pendingAssignments
+        - overdueAssignments
+        - completedPomodoros
+        - subjectStats
+        - weeklyActivity
+        - weakSubjects
+        - strongSubjects
+        - recommendations
+        - badges
+        - recentActivities
+
+    SubjectStat:
+      type: object
+      properties:
+        subjectId:
+          type: integer
+        subjectName:
+          type: string
+        color:
+          type: string
+        studyMinutes:
+          type: integer
+        attendancePercent:
+          type: number
+        performanceScore:
+          type: number
+        completedTopics:
+          type: integer
+        totalTopics:
+          type: integer
+      required:
+        - subjectId
+        - subjectName
+        - color
+        - studyMinutes
+        - attendancePercent
+        - performanceScore
+        - completedTopics
+        - totalTopics
+
+    DayActivity:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        studyMinutes:
+          type: integer
+        completedTasks:
+          type: integer
+      required:
+        - date
+        - studyMinutes
+        - completedTasks
+
+    ExamCountdown:
+      type: object
+      properties:
+        subjectName:
+          type: string
+        examDate:
+          type: string
+          format: date
+        daysLeft:
+          type: integer
+      required:
+        - subjectName
+        - examDate
+        - daysLeft
+
+    Badge:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        icon:
+          type: string
+        earnedAt:
+          type: string
+          format: date-time
+        category:
+          type: string
+          enum: [streak, study, attendance, assignment, achievement]
+      required:
+        - id
+        - name
+        - description
+        - icon
+        - category
+
+    Activity:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+        description:
+          type: string
+        points:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - type
+        - description
+        - points
+        - createdAt
+
+    RewardsData:
+      type: object
+      properties:
+        totalPoints:
+          type: integer
+        level:
+          type: integer
+        levelName:
+          type: string
+        pointsToNextLevel:
+          type: integer
+        levelProgress:
+          type: number
+        badges:
+          type: array
+          items:
+            $ref: "#/components/schemas/Badge"
+        availableRewards:
+          type: array
+          items:
+            $ref: "#/components/schemas/Reward"
+        pointsBreakdown:
+          type: object
+          properties:
+            attendance:
+              type: integer
+            study:
+              type: integer
+            assignments:
+              type: integer
+            streak:
+              type: integer
+          required:
+            - attendance
+            - study
+            - assignments
+            - streak
+      required:
+        - totalPoints
+        - level
+        - levelName
+        - pointsToNextLevel
+        - levelProgress
+        - badges
+        - availableRewards
+        - pointsBreakdown
+
+    Reward:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        pointCost:
+          type: integer
+        category:
+          type: string
+        available:
+          type: boolean
+      required:
+        - id
+        - name
+        - description
+        - pointCost
+        - category
+        - available
+
+    PointsEvent:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+        description:
+          type: string
+        points:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - type
+        - description
+        - points
+        - createdAt

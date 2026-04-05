@@ -1,0 +1,22 @@
+packages:
+  "framer-motion": "For fluid page transitions, layout animations, and premium micro-interactions"
+  "recharts": "For rendering beautiful analytics charts on the dashboard and attendance pages"
+  "date-fns": "For formatting due dates, planner timelines, and attendance calendars"
+  "lucide-react": "For crisp, consistent iconography throughout the application"
+  "clsx": "Utility for conditionally joining class names"
+  "tailwind-merge": "Utility to merge tailwind classes safely"
+  "react-hook-form": "For robust form state management and validation"
+  "@hookform/resolvers": "For Zod schema validation integration with react-hook-form"
+
+images:
+  - path: "artifacts/learning-system/public/images/auth-bg.png"
+    description: "Abstract 3D gradient mesh in deep violet, neon purple, and black. High-end, clean, professional student productivity aesthetic. Subtle glowing orbs."
+    aspect_ratio: "16:9"
+  - path: "artifacts/learning-system/public/images/dashboard-hero.png"
+    description: "Abstract minimal 3D shapes representing learning, books, and glowing data nodes in dark mode colors (indigo and cyan)."
+    aspect_ratio: "16:9"
+
+notes:
+  - Custom global fetch interceptor is implemented in App.tsx to inject the Authorization Bearer token into all custom-fetch and native fetch requests.
+  - The UI relies heavily on Shadcn UI components provided in the workspace context.
+  - Wouter is used for routing; Links use direct className prop application.

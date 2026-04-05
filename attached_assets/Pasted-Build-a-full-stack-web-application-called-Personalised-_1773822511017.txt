@@ -1,0 +1,138 @@
+Build a full-stack web application called “Personalised Learning System” using strictly these technologies only:
+
+Frontend: HTML, CSS, JavaScript, Bootstrap
+Backend: Node.js
+Database: MongoDB
+Do not use React, Angular, Vue, TypeScript, Firebase, PostgreSQL, or any other extra framework unless absolutely required by Node.js ecosystem for backend support (such as Express, Mongoose, JWT, bcrypt, multer, etc.).
+
+Project Goal
+Create a smart AI-powered study platform for students, especially school/college students, that helps them study effectively, stay consistent, track progress, and improve weak areas through personalized learning tools and analytics.
+
+Core Features Required
+Authentication System
+
+Secure student signup/login/logout
+Password hashing
+Session or JWT-based authentication
+Profile management
+Study Material Upload + AI Processing
+
+Students can upload study materials such as PDF, text, notes, or images
+AI should process the uploaded content and generate:
+Flashcards
+Notes
+Short-answer questions
+MCQs
+Summaries
+These outputs should be stored topic-wise and subject-wise
+Subjects and Topics Management
+
+Students can create, edit, and delete subjects
+Inside each subject, students can create topics/units/chapters
+Uploaded materials and generated AI content must be linked properly to these topics
+Attendance Tracker
+
+Students can set attendance goals/expectations
+Daily/weekly attendance can be tracked
+If attendance falls below expectation, a logic-based penalty or score deduction system should apply
+Show attendance analytics in dashboard
+Assignments Module
+
+Students can create and manage assignments
+Add due dates, status, priority, and related subject/topic
+Mark assignments complete
+Late completion should affect performance score or streak
+AI Study Planner
+
+Build a smart AI assistant that generates personalized study plans for:
+a topic
+a unit
+a full subject
+exam preparation in the last 2–3 days
+Plan should consider:
+exam date
+pending assignments
+weak areas
+available study hours
+attendance and consistency
+This feature is highly important
+Pomodoro Timer
+
+Topic-wise and subject-wise Pomodoro timer
+Students can log study sessions
+Track duration, breaks, and completed sessions
+Data should feed into dashboard analytics
+Dashboard and Analytics
+
+A central dashboard showing:
+total study hours
+subject-wise study time
+completed assignments
+attendance percentage
+streaks
+points earned
+pending tasks
+AI-generated recommendations
+Visual charts/graphs for performance tracking
+AI-Based Performance Analysis
+
+This is a crucial feature
+Build an AI-based graph/analytics system that identifies:
+weak subjects
+weak topics
+strong subjects
+study consistency
+question performance
+attendance impact
+It should suggest improvement strategies based on student behavior and data
+Reward / Points System
+
+Students earn points for:
+regular attendance
+completing study sessions
+finishing assignments on time
+maintaining streaks
+completing AI-generated tasks
+Points can be deducted for inactivity, missed targets, low attendance, or overdue tasks
+Include a rewards section where points can later be redeemed for branded or motivational products (design the structure even if redemption is mock/demo only)
+Dark Theme
+Entire app should have a modern dark theme by default
+Must include light/dark theme toggle option
+UI should be student-friendly, clean, responsive, and motivating
+Add More Useful Features
+Also include some intelligent extra features that improve the usefulness of the platform, such as:
+
+Daily study goals
+Exam countdown
+Revision reminders
+Study streak system
+Smart notifications
+Weak-topic revision suggestions
+Priority-based task ordering
+Progress badges/achievements
+“Today’s Plan” section
+Missed-study recovery suggestions
+AI motivational tips for students who are falling behind
+Logic and Connectivity
+Design the whole project in a deeply connected way so that all modules influence each other. For example:
+
+Attendance should affect points and performance score
+Pomodoro study sessions should increase study hours and dashboard stats
+AI analysis should use assignment completion, test performance, attendance, and study time
+Study planner should adapt based on weak subjects and upcoming exams
+Rewards and streaks should encourage consistency and regular platform usage
+Deliverables Expected
+Generate:
+
+Full project structure
+Frontend pages using HTML, CSS, JavaScript, and Bootstrap
+Backend APIs using Node.js
+MongoDB schema/models
+Authentication flow
+Dashboard logic
+AI integration placeholders/endpoints
+Clean folder structure
+Responsive UI
+Comments in code where necessary
+The final application should feel like a complete AI-powered student productivity and learning companion, focused on helping students study smarter, track everything in one place, improve weak areas, and stay motivated through analytics and rewards.
+

@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: learnwise-api
+    env: node
+    buildCommand: pnpm install && pnpm run build
+    startCommand: node dist/index.cjs
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        sync: false
+      - key: AI_INTEGRATIONS_OPENAI_API_KEY
+        sync: false
+      - key: AI_INTEGRATIONS_OPENAI_BASE_URL
+        value: https://api.openai.com/v1
+      - key: JWT_SECRET
+        sync: false
