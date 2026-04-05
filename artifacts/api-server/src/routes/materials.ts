@@ -54,7 +54,7 @@ async function extractTextFromFile(buffer: Buffer, mimetype: string, filename: s
 async function generateAIContent(title: string, content: string) {
   try {
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "llama-3.1-8b-instant",
       messages: [
         {
           role: "system",

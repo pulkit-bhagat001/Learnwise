@@ -70,7 +70,7 @@ Make tasks specific, achievable, and progressive. Include review sessions and br
     let planData;
     try {
       const response = await openai.chat.completions.create({
-        model: "gpt-5-mini",
+        model: "llama-3.3-70b-versatile",
         messages: [
           { role: "system", content: "You are an expert educational AI that creates personalized study plans. Return ONLY valid JSON, no markdown." },
           { role: "user", content: prompt },
