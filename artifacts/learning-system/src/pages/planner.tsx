@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Sparkles, Calendar, Target, CheckCircle2, BookOpen } from "lucide-react";
+import { Sparkles, Calendar, Target, CheckCircle2, BookOpen, Clock } from "lucide-react";
 
 const planSchema = z.object({
   planType: z.enum(["topic", "unit", "subject", "exam_prep"]),
